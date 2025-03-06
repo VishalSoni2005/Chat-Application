@@ -1,7 +1,18 @@
 import { generateToken } from "../Lib/utils.js";
 import User from "../Model/user.model.js";
+import { v2 as cloudinary } from 'cloudinary'; 
 
 import bcrypt from "bcryptjs";
+
+// Utility function to upload files to Cloudinary
+async function uploadToCloudinary(file, folder, quality) {
+  const options = { folder };
+  options.resource_type = "auto"; //todo: important to detect file type
+  if (quality) {
+    options.quality = quality; //todo: important to compress file size
+  }
+  return await cloudinary.uploader.upload(file.tempFilePath, options);
+}
 export const signup = async (req, res) => {
   try {
     const { fullname, email, password } = req.body;
@@ -81,4 +92,19 @@ export const logout = (req, res) => {
   }
 };
 
-export const updateProfilePicture = async(req, res) => {}
+export const updateProfilePicture = async(req, res) => {
+  try {
+    const { profilePic} = req.body;
+    const userId = req.user._id;
+
+    if(!profilePic){
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const uploadResponse = await cloudinar
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
