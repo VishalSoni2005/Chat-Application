@@ -5,7 +5,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import bcrypt from "bcryptjs";
 
 // Utility function to upload files to Cloudinary
-async function uploadToCloudinary(file, folder, quality) {
+async function uploadToCloudinary(file, folder = "VishalSoni", quality) {
   const options = { folder };
   options.resource_type = "auto"; //todo: important to detect file type
   if (quality) {
@@ -101,8 +101,20 @@ export const updateProfilePicture = async(req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const uploadResponse = await cloudinar
+    const uploadResponse = await uploadToCloudinary(profilePic, "VishalSoni");
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: uploadResponse.secure_url }, { new: true });
     
+    res.status(200).json({ updatedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json({ message: "Authorized" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
