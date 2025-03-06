@@ -1,16 +1,22 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-export const generateToken = (userId, res) => {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: "1d"
-  });
+export const generateToken = async (userId, res) => {
+  try {
+    const payload = { userId };
 
-  res.cookie("jwt", token, {
-    maxAge: 1 * 24 * 60 * 60 * 1000, // MS
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV !== "development"
-  });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-  return token;
+    res.cookie("jwt", token, {
+      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict"
+    });
+    return token;
+  } catch (err) {
+    console.log("Error in generating token", err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 };
