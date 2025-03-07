@@ -5,6 +5,7 @@ import fileUpload from "express-fileupload";
 
 dotenv.config();
 import cookieParser from "cookie-parser";
+import messageRoute from "./Routes/message.route.js";
 import authRoute from "./Routes/auth.route.js";
 
 const app = express();
@@ -34,6 +35,7 @@ app.use(
 
 // routes
 app.use("/api/auth", authRoute);
+app.use("/api/messages", messageRoute);
 
 // server start up
 const PORT = process.env.PORT;
