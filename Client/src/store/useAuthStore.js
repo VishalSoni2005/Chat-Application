@@ -22,5 +22,18 @@ export const useAuthStore = create((set) => ({
     } finally {
       set({ isCheckingAuth: false });
     }
+  },
+
+  signup: async ( data ) => {
+    try {
+      set({ isSigningUp: true });
+      const res = await axiosInstance.post("/auth/signup", data); //* this will send data to server to create user and return containing user object set from middleware
+      set({ authUser: res.data });
+    } catch (error) {
+      console.error("Error in signup ", error);
+    } finally {
+      set({ isSigningUp: false });
+    }
+    
   }
 }));
