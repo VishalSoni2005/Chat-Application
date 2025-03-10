@@ -18,13 +18,13 @@ export const useAuthStore = create((set) => ({
       set({ authUser: res.data }); // this set user object to authUser
     } catch (error) {
       set({ authUser: null });
-      console.error("Error in checkAuth ",error);
+      console.error("Error in checkAuth ", error);
     } finally {
       set({ isCheckingAuth: false });
     }
   },
 
-  signup: async ( data ) => {
+  signup: async (data) => {
     try {
       set({ isSigningUp: true });
       const res = await axiosInstance.post("/auth/signup", data); //* this will send data to server to create user and return containing user object set from middleware
@@ -34,6 +34,5 @@ export const useAuthStore = create((set) => ({
     } finally {
       set({ isSigningUp: false });
     }
-    
   }
 }));
