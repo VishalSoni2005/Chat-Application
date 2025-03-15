@@ -4,10 +4,10 @@ dotenv.config();
 
 export const generateToken = async (userId, res) => {
   try {
-    //* cookie only contain userID
     const payload = { userId };
-
+    
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
+    //* cookie only contain userID as payload
 
     res.cookie("jwt", token, {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours

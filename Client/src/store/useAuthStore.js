@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 
+//! Remember Zustand set value to state just like we use useState hook in react
 export const useAuthStore = create((set) => ({
   // initial states
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
-
   isCheckingAuth: true,
 
   // actions

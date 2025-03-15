@@ -10,7 +10,7 @@ import { authorizedRoute } from "../Middleware/authorise.middleware.js";
 const router = express.Router();
 
 // test Route
-router.get("/login/check", authorizedRoute, checkAuth);
+router.get("/check", authorizedRoute, checkAuth);
 
 // route for authentication
 router.post("/signup", signup);
