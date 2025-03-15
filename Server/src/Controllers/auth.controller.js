@@ -1,7 +1,6 @@
 import { generateToken } from "../Lib/utils.js";
 import User from "../Model/user.model.js";
 import { v2 as cloudinary } from "cloudinary";
-
 import bcrypt from "bcryptjs";
 
 // Utility function to upload files to Cloudinary
@@ -91,7 +90,6 @@ export const logout = (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 export const updateProfilePicture = async (req, res) => {
   try {
     const { profilePic } = req.body;
@@ -115,7 +113,6 @@ export const updateProfilePicture = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 export const checkAuth = (req, res) => {
   try {
     res.status(200).json({ message: "Authorized" });

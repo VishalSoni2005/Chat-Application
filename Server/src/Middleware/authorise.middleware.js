@@ -8,6 +8,8 @@ export const authorizedRoute = async (req, res, next) => {
   try {
     const token = req.cookie.jwt;
 
+    //* cookie only contain userID
+
     if (!token) {
       res.status(401).json({ message: "Unauthorized" });
       return;
@@ -28,7 +30,16 @@ export const authorizedRoute = async (req, res, next) => {
       return;
     }
 
+    /*
+      user = {
+        _id: user._id,
+        email: user.email,
+        fullname: user.fullname,
+        profilePic: user.profilePic,
+      }
+    */
     req.user = user; //todo: note user is added to request
+    //* now req contain { cookie, user (OBJECT) }
     next();
   } catch (err) {
     res.status(401).json({ message: "Unauthorized" });

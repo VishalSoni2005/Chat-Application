@@ -2,19 +2,19 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
-
-dotenv.config();
 import cookieParser from "cookie-parser";
+
 import messageRoute from "./Routes/message.route.js";
 import authRoute from "./Routes/auth.route.js";
-
-const app = express();
+dotenv.config();
 
 // database connection
 import { connectDB } from "./Lib/db.js";
 import { cloudinaryConnection } from "./Lib/cloudinary.js";
 cloudinaryConnection();
 connectDB();
+
+const app = express();
 
 // middleware
 app.use(
