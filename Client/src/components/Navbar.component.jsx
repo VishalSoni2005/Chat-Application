@@ -14,7 +14,7 @@ const Navbar = () => {
               <div className="bg-primary/10 flex size-9 items-center justify-center rounded-lg">
                 <MessageSquare className="text-primary h-5 w-5" />
               </div>
-              <h1 className="text-lg font-bold">Parrot</h1>
+              <h1 className="text-lg font-bold font-serif">Together</h1>
             </Link>
           </div>
 
@@ -27,7 +27,9 @@ const Navbar = () => {
             {authUser && (
               <>
                 <Link to={"/profile"} className={`btn btn-sm gap-2`}>
-                  <User className="size-5" />
+                  {/* <User className="size-5" />
+                   */}
+                  <img src={authUser.profilePic} className="size-7 rounded-full" alt="" />
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
 

@@ -17,8 +17,8 @@ export const useAuthStore = create((set) => ({
     try {
       //* this will give a containing user object set from middleware
       const res = await axiosInstance.get("/auth/check");
-
       set({ authUser: res.data }); // this set user object to authUser
+      
     } catch (error) {
       console.error("Error in checkAuth:", error.response?.data?.message || error.message);
       set({ authUser: null });
