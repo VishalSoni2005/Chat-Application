@@ -6,7 +6,8 @@ dotenv.config();
 
 export const authorizedRoute = async (req, res, next) => {
   try {
-    const token = req.cookie.jwt;
+    const token = req.cookies.jwt;
+    console.log("Token is : ", token);
 
     //* cookie only contain userID
 
