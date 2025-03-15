@@ -16,9 +16,13 @@ export const signup = async (req, res) => {
   try {
     const { fullname, email, password } = req.body;
 
+    
+    
     // validate inputs
     if (!fullname || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      console.log("Request Body from frontend: ",fullname,email,password);
+
+      return res.status(401).json({ message: "All Feild is not send to backend ..." });
     }
 
     const existingUser = await User.findOne({ email });

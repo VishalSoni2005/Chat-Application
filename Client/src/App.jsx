@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar.component";
 import { useAuthStore } from "./store/useAuthStore.js";
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -15,7 +16,7 @@ function App() {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-  // console.log(authUser);
+  console.log(authUser);
 
   if (isCheckingAuth && !authUser)
     return (
@@ -35,6 +36,8 @@ function App() {
         <Route path="/settings" element={<SettingPage />} />
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
+
+      <Toaster />
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 //! Remember Zustand set value to state just like we use useState hook in react
 export const useAuthStore = create((set) => ({
@@ -26,14 +28,44 @@ export const useAuthStore = create((set) => ({
   },
 
   signup: async (data) => {
+    set({ isSigningUp: true });
     try {
-      set({ isSigningUp: true });
-      const res = await axiosInstance.post("/auth/signup", data); //* this will send data to server to create user and return containing user object set from middleware
+      // const res = await axiosInstance.post("/auth/signup", data); //* this will send data to server to create user and //* this will return a user object set from middleware
+      console.log("data sent to server", data);
+
+      const res = await axios.post("http://localhost:5001/api/auth/signup", data);
+      console.log("res", res);
+
       set({ authUser: res.data });
+      toast.success("Account Created Successfully");
     } catch (error) {
-      console.error("Error in signup ", error);
+      toast.error(`Error creating account: ${error.response?.data?.message || error.message}`);
+      console.error("Error in signup:", error.response?.data?.message || error.message);
     } finally {
       set({ isSigningUp: false });
+    }
+  },
+
+  login: async (data) => {
+    try {
+      set({ isLoggingIn: true });
+      const res = await axiosInstance.post("/auth/login", data);
+      set({ authUser: res.data });
+      toast.success("Logged In Successfully");
+    } catch (error) {
+      toast.error(`Error logging in: ${error.response?.data?.message || error.message}`);
+      console.error("Error in login:", error.response?.data?.message || error.message);
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
+  logout: async () => {
+    try {
+      await axiosInstance.post("/auth/logout");
+      set({ authUser: null });
+      toast.success("Logged Out");
+    } catch (error) {
+      toast.error(error.message);
     }
   }
 }));

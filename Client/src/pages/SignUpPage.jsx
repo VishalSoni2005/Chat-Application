@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react";
 import { Link } from "react-router";
 
-import AuthImagePattern from '../components/SignupImageGrid.component'
+import AuthImagePattern from "../components/SignupImageGrid.component";
 import toast from "react-hot-toast";
 
 const SignUpPage = () => {
@@ -19,19 +19,27 @@ const SignUpPage = () => {
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
     if (!formData.email.trim()) return toast.error("Email is required");
-    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    // if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
     if (!formData.password) return toast.error("Password is required");
-    if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+    if (formData.password.length < 3) return toast.error("Password must be at least 3 characters");
 
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("Form Data is : ", formData);
 
     const success = validateForm();
 
-    if (success === true) signup(formData);
+    if (success === true) {
+      try {
+        await signup(formData);
+      } catch (error) {
+        console.error("Signup failed:", error);
+      }
+    }
   };
 
   return (
@@ -116,6 +124,9 @@ const SignUpPage = () => {
             </div>
 
             <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
+
+              {/* {console.log("this is form data : ",formData)} */}
+
               {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
