@@ -16,11 +16,9 @@ export const signup = async (req, res) => {
   try {
     const { fullname, email, password } = req.body;
 
-    
-    
     // validate inputs
     if (!fullname || !email || !password) {
-      console.log("Request Body from frontend: ",fullname,email,password);
+      console.log("Request Body from frontend: ", fullname, email, password);
 
       return res.status(401).json({ message: "All Feild is not send to backend ..." });
     }
@@ -99,6 +97,9 @@ export const updateProfilePicture = async (req, res) => {
     const { profilePic } = req.body;
     const userId = req.user._id;
 
+    console.log("Request Body from frontend: ", profilePic);
+    
+
     if (!profilePic) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -111,6 +112,8 @@ export const updateProfilePicture = async (req, res) => {
       { new: true }
     );
 
+    console.log("Updated user", updatedUser);
+
     res.status(200).json({ updatedUser });
   } catch (error) {
     console.error(error);
@@ -119,7 +122,7 @@ export const updateProfilePicture = async (req, res) => {
 };
 export const checkAuth = (req, res) => {
   try {
-    res.status(200).json({ message: "Authorized" });
+    res.status(200).json(req.user);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

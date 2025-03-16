@@ -18,5 +18,5 @@ router.post("/login", login);
 router.post("/logout", logout);
 //? image update route, we use put method
 router.put("/update-profile", authorizedRoute, updateProfilePicture);
-
+//* put request -> Replaces the entire resource with a new one
 export default router;
