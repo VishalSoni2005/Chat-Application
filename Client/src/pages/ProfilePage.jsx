@@ -1,36 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import toast from "react-hot-toast";
 import { Camera, Mail, User } from "lucide-react";
 
 const ProfilePage = () => {
-  const {checkAuth, authUser, isUpdatingProfile, updateProfile } = useAuthStore();
-  const [selectedImg, setSelectedImg] = useState(null);
+  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const [selectedImg, setSelectedImg] = useState(null)
 
-  // const handleImageUpload = async (e) => {
-
-  //   console.log("e.target.files return FILELIST object ", e.target.files);
-  //   console.log("Selected image:", e.target.files[0]);
-
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-
-  //   const reader = new FileReader(); //FileReader is a built-in JavaScript API that allows you to read the contents of files (like images, PDFs, text files) from the client side.
-
-  //   reader.readAsDataURL(file); //Reads the file and converts it to a Base64-encoded string (data URL).
-
-  //   reader.onload = async () => {
-  //     //Callback trigerred when the file is loaded
-  //     const base64Image = reader.result;
-  //     setSelectedImg(base64Image);
-  //     console.log("base64Image", base64Image);
-  //     await updateProfile({ profilePic: base64Image });
-  //   };
-  // };
-  useEffect(() => {
-   checkAuth();
-  
-  }, [checkAuth]);
+  // useEffect(() => {
+  //  checkAuth();
+  // }, [checkAuth]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -44,14 +23,13 @@ const ProfilePage = () => {
       await updateProfile(formData);
       const imageUrl = URL.createObjectURL(file);
       setSelectedImg(imageUrl);
-      
     } catch (error) {
       toast.error("Error updating profile");
       console.error("Error updating profile:", error);
     }
   };
   return (
-    <div className="h-screen pt-20">
+    <div className="h-auto pt-20">
       <div className="mx-auto max-w-2xl p-4 py-8">
         <div className="bg-base-300 space-y-8 rounded-xl p-6">
           <div className="flex flex-col text-center">

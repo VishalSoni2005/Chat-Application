@@ -15,9 +15,8 @@ export const useAuthStore = create((set) => ({
   // actions
   checkAuth: async () => {
     try {
-      // this will give a containing user object set from middleware
       const res = await axiosInstance.get("/auth/check");
-      console.log("CheckAuth response: ", res);
+      // console.log("CheckAuth response: ", res);
 
       set({ authUser: res.data }); // this set user object to authUser
     } catch (error) {
