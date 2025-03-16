@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import toast from "react-hot-toast";
 import { Camera, Mail, User } from "lucide-react";
 
 const ProfilePage = () => {
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const {checkAuth, authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
 
   // const handleImageUpload = async (e) => {
@@ -27,6 +27,10 @@ const ProfilePage = () => {
   //     await updateProfile({ profilePic: base64Image });
   //   };
   // };
+  useEffect(() => {
+   checkAuth();
+  
+  }, [checkAuth]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -37,11 +41,10 @@ const ProfilePage = () => {
 
     try {
       // Create a URL for the selected image to display in the UI
+      await updateProfile(formData);
       const imageUrl = URL.createObjectURL(file);
       setSelectedImg(imageUrl);
-
-      await updateProfile(formData);
-
+      
     } catch (error) {
       toast.error("Error updating profile");
       console.error("Error updating profile:", error);
@@ -54,8 +57,8 @@ const ProfilePage = () => {
           <div className="flex flex-col text-center">
             <div className="flex items-center justify-center gap-2">
               <div className="h-5 w-5 animate-pulse rounded-full bg-green-600" />
-              <h1 className="font-serif text-2xl font-semibold">
-                {authUser?.fullname.toUpperCase() || "Profile"}
+              <h1 className="font-serif text-2xl font-semibold capitalize">
+                {authUser?.fullname || "Profile"}
               </h1>
             </div>
             <p className="mt-2">{authUser?.fullname} profile information</p>

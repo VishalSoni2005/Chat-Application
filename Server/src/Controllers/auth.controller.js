@@ -94,17 +94,17 @@ export const logout = (req, res) => {
 };
 export const updateProfilePicture = async (req, res) => {
   try {
-    const { profilePic } = req.body;
+    const file = req.files?.profilePic;
     const userId = req.user._id;
 
-    console.log("Request Body from frontend: ", profilePic);
+    // console.log("Request Body from frontend: ", file);
     
 
-    if (!profilePic) {
+    if (!file) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const uploadResponse = await uploadToCloudinary(profilePic, "VishalSoni");
+    const uploadResponse = await uploadToCloudinary(file, "VishalSoni");
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -112,7 +112,7 @@ export const updateProfilePicture = async (req, res) => {
       { new: true }
     );
 
-    console.log("Updated user", updatedUser);
+    // console.log("Updated user", updatedUser);
 
     res.status(200).json({ updatedUser });
   } catch (error) {

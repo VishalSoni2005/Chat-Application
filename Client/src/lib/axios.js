@@ -2,7 +2,8 @@ import axios from "axios";
 
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:5001/api",
-  withCredentials: true // enables cookies
+  withCredentials: true, // enables cookies,
+  headers: { "Content-Type": "application/json" } // for API calls that return JSON
 });
 
 axiosInstance.interceptors.request.use(

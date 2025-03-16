@@ -70,10 +70,16 @@ export const useAuthStore = create((set) => ({
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axiosInstance.put("/auth/update-profile", data);
-      console.log("res", res);
-      
+      //console.log("FormData being sent to backend:", Object.fromEntries(data.entries()));
+
+      const res = await axiosInstance.put("/auth/update-profile", data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
       set({ authUser: res.data });
+      window.location.reload();
       toast.success("Profile Updated Successfully");
     } catch (error) {
       toast.error(`Error updating profile: ${error.response?.data?.message || error.message}`);
