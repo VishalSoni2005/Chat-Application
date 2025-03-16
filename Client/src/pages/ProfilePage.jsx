@@ -1,33 +1,52 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import toast from "react-hot-toast";
 import { Camera, Mail, User } from "lucide-react";
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
 
+  // const handleImageUpload = async (e) => {
+
+  //   console.log("e.target.files return FILELIST object ", e.target.files);
+  //   console.log("Selected image:", e.target.files[0]);
+
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   const reader = new FileReader(); //FileReader is a built-in JavaScript API that allows you to read the contents of files (like images, PDFs, text files) from the client side.
+
+  //   reader.readAsDataURL(file); //Reads the file and converts it to a Base64-encoded string (data URL).
+
+  //   reader.onload = async () => {
+  //     //Callback trigerred when the file is loaded
+  //     const base64Image = reader.result;
+  //     setSelectedImg(base64Image);
+  //     console.log("base64Image", base64Image);
+  //     await updateProfile({ profilePic: base64Image });
+  //   };
+  // };
+
   const handleImageUpload = async (e) => {
-    //TODO: remove this console logs
-
-    console.log("e.target.files return FILELIST object ", e.target.files);
-    console.log("Selected image:", e.target.files[0]);
-
     const file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader(); //FileReader is a built-in JavaScript API that allows you to read the contents of files (like images, PDFs, text files) from the client side.
+    const formData = new FormData();
+    formData.append("profilePic", file);
 
-    reader.readAsDataURL(file); //Reads the file and converts it to a Base64-encoded string (data URL).
+    try {
+      // Create a URL for the selected image to display in the UI
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImg(imageUrl);
 
-    reader.onload = async () => {
-      //Callback trigerred when the file is loaded
-      const base64Image = reader.result;
-      setSelectedImg(base64Image);
-      console.log("base64Image", base64Image);
-      await updateProfile({ profilePic: base64Image });
-    };
+      await updateProfile(formData);
+
+    } catch (error) {
+      toast.error("Error updating profile");
+      console.error("Error updating profile:", error);
+    }
   };
-
   return (
     <div className="h-screen pt-20">
       <div className="mx-auto max-w-2xl p-4 py-8">
