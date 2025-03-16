@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, Mail, User } from "lucide-react";
 
-export default function ProfilePage() {
+const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
 
@@ -27,12 +27,18 @@ export default function ProfilePage() {
       await updateProfile({ profilePic: base64Image });
     };
   };
+
   return (
     <div className="h-screen pt-20">
       <div className="mx-auto max-w-2xl p-4 py-8">
         <div className="bg-base-300 space-y-8 rounded-xl p-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold">{authUser?.fullname.toUpperCase()}</h1>
+          <div className="flex flex-col text-center">
+            <div className="flex items-center justify-center gap-2">
+              <div className="h-5 w-5 animate-pulse rounded-full bg-green-600" />
+              <h1 className="font-serif text-2xl font-semibold">
+                {authUser?.fullname.toUpperCase() || "Profile"}
+              </h1>
+            </div>
             <p className="mt-2">{authUser?.fullname} profile information</p>
           </div>
 
@@ -99,4 +105,5 @@ export default function ProfilePage() {
       </div>
     </div>
   );
-}
+};
+export default ProfilePage;

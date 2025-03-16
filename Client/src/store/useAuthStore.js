@@ -15,10 +15,11 @@ export const useAuthStore = create((set) => ({
   // actions
   checkAuth: async () => {
     try {
-      //* this will give a containing user object set from middleware
+      // this will give a containing user object set from middleware
       const res = await axiosInstance.get("/auth/check");
+      console.log("CheckAuth response: ", res);
+
       set({ authUser: res.data }); // this set user object to authUser
-      
     } catch (error) {
       console.error("Error in checkAuth:", error.response?.data?.message || error.message);
       set({ authUser: null });
@@ -66,13 +67,12 @@ export const useAuthStore = create((set) => ({
       toast.error(error.message);
     }
   },
-  updateProfile: async(data) => {
+  updateProfile: async (data) => {
     try {
       set({ isUpdatingProfile: true });
       const res = await axiosInstance.patch("/auth/update-profile", data);
       set({ authUser: res.data });
       toast.success("Profile Updated Successfully");
-      
     } catch (error) {
       toast.error(`Error updating profile: ${error.response?.data?.message || error.message}`);
     } finally {
