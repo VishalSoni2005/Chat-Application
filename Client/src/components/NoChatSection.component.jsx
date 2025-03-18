@@ -1,4 +1,3 @@
-import { MessageSquare } from "lucide-react";
 
 const NoChatSelected = () => {
   return (
@@ -8,16 +7,15 @@ const NoChatSelected = () => {
         <div className="mb-4 flex justify-center gap-4">
           <div className="relative">
             <div className="bg-primary/10 flex h-16 w-16 animate-bounce items-center justify-center rounded-2xl">
-              <MessageSquare className="text-primary h-8 w-8" />
+              <img src={"/logo.svg"} className="text-primary m-2" />
             </div>
           </div>
         </div>
 
         {/* Welcome Text */}
-        <h2 className="text-2xl font-bold">Welcome to Chatty!</h2>
-        <p className="text-base-content/60">
-          Select a conversation from the sidebar to start chatting
-        </p>
+        <h2 className="text-2xl font-bold">Welcome to Together!</h2>
+        <p className="text-base-content/60">Secure Messaging, Peace of Mind</p>
+        <p className="text-base-content/60">🔒 End-to-end encrypted</p>
       </div>
     </div>
   );

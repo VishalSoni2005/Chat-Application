@@ -13,6 +13,11 @@ export const useChatStore = create((set) => ({
     set({ isUserLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
+
+      //* res.data contain : [ {}, {}, {} ] 
+      //* where each object have: _id, fullname, email, password, createdAt and updatedAt
+      //* elcluding the data of sender
+         
       set({ users: res.data });
     } catch (error) {
       toast.error(`Error fetching users: ${error.response?.data?.message || error.message}`);
@@ -24,6 +29,9 @@ export const useChatStore = create((set) => ({
     set({ isUserLoading: true });
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
+
+      //* res.data contain : { senderId, reserverId, text, img } 
+      
       set({ messages: res.data });
     } catch (error) {
       toast.error(error.response.data.message);

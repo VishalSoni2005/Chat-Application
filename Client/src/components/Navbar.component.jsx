@@ -11,8 +11,8 @@ const Navbar = () => {
         <div className="flex h-full items-center justify-between">
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2.5 transition-all hover:opacity-80">
-              <div className="bg-primary/10 flex size-9 items-center justify-center rounded-lg">
-                <MessageSquare className="text-primary h-5 w-5" />
+              <div className=" flex size-11 items-center justify-center rounded-lg">
+                <img src="/logo.svg" className="h-full" />
               </div>
               <h1 className="text-lg font-bold font-serif">Together</h1>
             </Link>

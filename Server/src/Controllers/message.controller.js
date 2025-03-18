@@ -5,9 +5,9 @@ import { v2 as cloudinary } from "cloudinary";
 // Utility function to upload files to Cloudinary
 async function uploadToCloudinary(file, folder = "VishalSoni", quality) {
   const options = { folder };
-  options.resource_type = "auto"; //todo: important to detect file type
+  options.resource_type = "auto";                                   //todo: important to detect file type
   if (quality) {
-    options.quality = quality; //todo: important to compress file size
+    options.quality = quality;                                      //todo: important to compress file size
   }
   return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
@@ -15,7 +15,7 @@ async function uploadToCloudinary(file, folder = "VishalSoni", quality) {
 export const getUserForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    const filteredUser = await User.find({ _id: { $en: loggedInUserId } });
+    const filteredUser = await User.find({ _id: { $ne: loggedInUserId } }); // not equal to 
 
     res.status(200).json(filteredUser);
   } catch (error) {
@@ -31,8 +31,8 @@ export const getMessages = async (req, res) => {
     const { id: userToChatId } = req.params;
     const senderId = req.user._id;
 
+    //? : The $or operator matches documents where at least one of the given conditions is true. IT ACCEPTS AND ARRAY
     const messages = await Message.find({
-      // TODO: The $or operator matches documents where at least one of the given conditions is true. IT ACCEPTS AND ARRAY
       $or: [
         { senderId: senderId, receiverId: userToChatId },
         { senderId: userToChatId, receiverId: senderId }
