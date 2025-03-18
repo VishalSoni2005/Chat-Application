@@ -54,6 +54,8 @@ const Sidebar = () => {
                 alt={user.name}
                 className="size-12 rounded-full object-cover"
               />
+              
+              {/* Online indicator */}
               {onlineUsers.includes(user._id) && (
                 <span className="absolute bottom-0 right-0 size-3 rounded-full bg-green-500 ring-2 ring-zinc-900" />
               )}

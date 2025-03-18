@@ -1,5 +1,6 @@
 import { useChatStore } from "../store/useChatStore";
 import { useEffect, useRef } from "react";
+
 import ChatHeader from "./ChatHeader.component";
 import MessageInput from "./MessageInput.component";
 
@@ -13,20 +14,24 @@ const ChatContainer = () => {
     messages,
     getMessages,
     isMessagesLoading,
-    selectedUser,
-    subscribeToMessages,
-    unsubscribeFromMessages
+    selectedUser
+    // subscribeToMessages,
+    // unsubscribeFromMessages
   } = useChatStore();
+
   const { authUser } = useAuthStore();
+
   const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser._id);
 
-    subscribeToMessages();
+    // subscribeToMessages();
 
-    return () => unsubscribeFromMessages();
-  }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+    // return () => unsubscribeFromMessages();
+    // }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [selectedUser._id, getMessages]);
+  // useEffect will run when selectedUser changes
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
