@@ -54,7 +54,7 @@ const Sidebar = () => {
                 alt={user.name}
                 className="size-12 rounded-full object-cover"
               />
-              
+
               {/* Online indicator */}
               {onlineUsers.includes(user._id) && (
                 <span className="absolute bottom-0 right-0 size-3 rounded-full bg-green-500 ring-2 ring-zinc-900" />
@@ -63,7 +63,7 @@ const Sidebar = () => {
 
             {/* User info - only visible on larger screens */}
             <div className="hidden min-w-0 text-left lg:block">
-              <div className="truncate font-medium">{user.fullName}</div>
+              <div className="truncate font-medium">{user.fullname}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
