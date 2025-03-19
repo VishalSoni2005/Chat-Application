@@ -11,10 +11,13 @@ dotenv.config();
 // database connection
 import { connectDB } from "./Lib/db.js";
 import { cloudinaryConnection } from "./Lib/cloudinary.js";
+import { app, server } from "./Lib/socket.js";
 cloudinaryConnection();
 connectDB();
 
-const app = express();
+
+// const app = express();
+app
 
 // middleware
 app.use(
@@ -39,6 +42,6 @@ app.use("/api/messages", messageRoute);
 
 // server start up
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

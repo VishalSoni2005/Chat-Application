@@ -2,9 +2,12 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { io } from "socket.io-client";
+
+const SERVER_URL = "http://localhost:5001";
 
 //! Remember Zustand set value to state just like we use useState hook in react
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   // initial states
   authUser: null,
   isSigningUp: false,
@@ -13,13 +16,16 @@ export const useAuthStore = create((set) => ({
   isCheckingAuth: true,
   onlineUsers: [],
 
+  socket: null,
+
   // actions
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
       // console.log("CheckAuth response: ", res);
-
       set({ authUser: res.data }); // this set user object to authUser
+
+      get().connectSocket();
     } catch (error) {
       console.error("Error in checkAuth:", error.response?.data?.message || error.message);
       set({ authUser: null });
@@ -63,6 +69,7 @@ export const useAuthStore = create((set) => ({
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success("Logged Out");
+      get().disconnectSocket();
     } catch (error) {
       toast.error(error.message);
     }
@@ -87,4 +94,22 @@ export const useAuthStore = create((set) => ({
       set({ isUpdatingProfile: false });
     }
   },
+
+  connectSocket: () => {
+    const { authUser } = get();
+    if (!authUser || get().socket?.connected) return;
+    const socket = io(SERVER_URL, {
+      query: {
+        userId: authUser._id
+      }
+    });
+    socket.connect();
+    set({ socket: socket });
+    socket.on('getOnlineUsers', (userIds) => {
+      set({ onlineUsers: userIds });
+    })
+  },
+  disconnectSocket: () => {
+    if (get().socket.connected) get().socket.disconnect();
+  }
 }));
