@@ -13,19 +13,24 @@ const io = new Server(server, {
 
 const onlineUsers = {}; // to store online users
 
-io.on('connection', (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+
+
+
+
+io.on("connection", (socket) => {
+  console.log(`User Connected: ${socket.id}`)
 
   const userId = socket.handshake.query.userId;
   if (userId) onlineUsers[userId] = socket.id;
 
+  
   io.emit("getOnlineUsers", Object.keys(onlineUsers));
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     console.log(`User Disconnected: ${socket.id}`);
     delete onlineUsers[userId];
     io.emit("getOnlineUsers", Object.keys(onlineUsers));
-  })
-  
-})
+  });
+});
+
 
 export { server, io, app };
