@@ -5,8 +5,11 @@ import toast from "react-hot-toast";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
+
   const [imagePreview, setImagePreview] = useState(null);
+
   const fileInputRef = useRef(null);
+
   const { sendMessage } = useChatStore();
 
   const handleImageChange = (e) => {
@@ -18,7 +21,7 @@ const MessageInput = () => {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImagePreview(reader.result);
+      setImagePreview(reader.result); // set the preview
     };
     reader.readAsDataURL(file);
   };
@@ -49,7 +52,7 @@ const MessageInput = () => {
 
   return (
     <div className="w-full p-4">
-      {imagePreview && (
+      {imagePreview && ( // Virtual DOM diffing algorithm activated to render this image
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
             <img
@@ -68,7 +71,9 @@ const MessageInput = () => {
       )}
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+        {/* this form have two part one is div and other is button */}
         <div className="flex flex-1 gap-2">
+          {/* Message Input area */}
           <input
             type="text"
             className="input input-bordered input-sm sm:input-md w-full rounded-lg"
@@ -76,6 +81,7 @@ const MessageInput = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+          {/* Image Input area */}
           <input
             type="file"
             accept="image/*"
@@ -83,14 +89,15 @@ const MessageInput = () => {
             ref={fileInputRef}
             onChange={handleImageChange}
           />
-
-          <button
+          <button //This button allows the user to open the file picker when clicked.
             type="button"
             className={`btn btn-circle hidden sm:flex ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
-            onClick={() => fileInputRef.current?.click()}>
+            onClick={() => fileInputRef.current?.click()}> 
+            {/* The onClick triger the input file picker form above imput area */}
             <Image size={20} />
           </button>
         </div>
+        {/* Main send btn */}
         <button
           type="submit"
           className="btn btn-sm btn-circle"
