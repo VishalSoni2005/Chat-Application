@@ -2,6 +2,7 @@ import { getRecieverSocketId } from "../Lib/socket.js";
 import Message from "../Model/message.model.js";
 import User from "../Model/user.model.js";
 import { v2 as cloudinary } from "cloudinary";
+import { io } from "../Lib/socket.js";
 
 // Utility function to upload files to Cloudinary
 async function uploadToCloudinary(file, folder = "VishalSoni", quality) {
@@ -71,6 +72,11 @@ export const sendMessage = async (req, res) => {
     await newMessage.save();
 
     const receiverSocketId = getRecieverSocketId(receiverId);
+
+    //* key funcionality to one to one personal chat at real time msg display
+    if(receiverId) {
+      io.to(receiverSocketId).emit('newMessage', newMessage);
+    }
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in sendMessage", error);
