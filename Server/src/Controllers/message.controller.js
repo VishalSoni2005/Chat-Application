@@ -1,3 +1,4 @@
+import { getRecieverSocketId } from "../Lib/socket.js";
 import Message from "../Model/message.model.js";
 import User from "../Model/user.model.js";
 import { v2 as cloudinary } from "cloudinary";
@@ -69,8 +70,7 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
-    //TODO: add real time function using socketio API
-
+    const receiverSocketId = getRecieverSocketId(receiverId);
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in sendMessage", error);
