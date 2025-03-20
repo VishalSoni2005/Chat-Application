@@ -10,6 +10,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 
 const ChatContainer = () => {
+  //* selectedUser / authUser : {fullname, email, password, profilePic, _id, CreatedAt, UpdatedAt}
   const {
     messages,
     getMessages,
@@ -19,12 +20,11 @@ const ChatContainer = () => {
     unsubscribeFromMessages
   } = useChatStore();
 
-  //* selectedUser / authUser : {fullname, email, password, profilePic, _id, CreatedAt, UpdatedAt}
-
   const { authUser } = useAuthStore();
 
   const messageEndRef = useRef(null);
 
+  // useEffect will run when selectedUser changes
   useEffect(() => {
     getMessages(selectedUser._id);
 
@@ -32,10 +32,8 @@ const ChatContainer = () => {
 
     return () => unsubscribeFromMessages();
   }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
-  // useEffect will run when selectedUser changes
 
-
-  //* scroll to bottom after sending message
+  // scroll to bottom after sending message
   useEffect(() => {
     if (messageEndRef.current && messages) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });

@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 
 const SERVER_URL = "http://localhost:5001";
 
-//! Remember Zustand set value to state just like we use useState hook in react
+//* Remember Zustand set value to state just like we use useState hook in react
 export const useAuthStore = create((set, get) => ({
   // initial states
   authUser: null,
@@ -24,6 +24,8 @@ export const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.get("/auth/check");
       // console.log("CheckAuth response: ", res);
       set({ authUser: res.data }); // this set user object to authUser
+
+      get().connectSocket();
     } catch (error) {
       console.error("Error in checkAuth:", error.response?.data?.message || error.message);
       set({ authUser: null });
@@ -31,6 +33,7 @@ export const useAuthStore = create((set, get) => ({
       set({ isCheckingAuth: false });
     }
   },
+
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
@@ -51,6 +54,7 @@ export const useAuthStore = create((set, get) => ({
       set({ isSigningUp: false });
     }
   },
+
   login: async (data) => {
     try {
       set({ isLoggingIn: true });
@@ -58,7 +62,7 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: res.data });
       toast.success("Logged In Successfully");
 
-      //! Connect socket when user logs in
+      // Connect socket when user logs in
       get().connectSocket();
 
       console.log("A socket is created -->> ", get().socket);
@@ -69,6 +73,7 @@ export const useAuthStore = create((set, get) => ({
       set({ isLoggingIn: false });
     }
   },
+
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
@@ -79,6 +84,7 @@ export const useAuthStore = create((set, get) => ({
       toast.error(error.message);
     }
   },
+
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
@@ -103,6 +109,8 @@ export const useAuthStore = create((set, get) => ({
   connectSocket: () => {
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
+
+    // create a new socket connection
     const socket = io(SERVER_URL, {
       //* this is extracted by backend using ==>> socket.handshake.query.userId
       query: {
@@ -110,21 +118,18 @@ export const useAuthStore = create((set, get) => ({
       }
     });
 
-    // console.log("Socket from frontEnd : ", socket);
+    // console.log("Socket created from useAuthStore : ", socket);
 
+    // socket connected
     socket.connect();
+
     set({ socket: socket });
 
-    socket.on("getOnlineUsers", (userIds) => { //* captured for emit method form backend as named getOnlineUsers
+    // captured for emit method form backend as named getOnlineUsers
+    socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
   },
-
-
-
-
-
-
 
   disconnectSocket: () => {
     if (get().socket.connected) get().socket.disconnect();

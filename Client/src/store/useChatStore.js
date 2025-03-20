@@ -26,6 +26,7 @@ export const useChatStore = create((set, get) => ({
       set({ isUserLoading: false });
     }
   },
+
   getMessages: async (userId) => {
     set({ isUserLoading: true });
     try {
@@ -40,13 +41,14 @@ export const useChatStore = create((set, get) => ({
       set({ isUserLoading: false });
     }
   },
+
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
       const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
 
       set({ message: [...messages, res.data] });
-      toast.success("Message sent successfully");
+      // toast.success("Message sent successfully");
     } catch (error) {
       toast.error(`Error sending message: ${error.response?.data?.message || error.message}`);
     }
@@ -57,18 +59,19 @@ export const useChatStore = create((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket; // getting socket from auth store
-    console.log("socket", socket);
+    // console.log("socket from useChatStore : ", socket);
 
     socket.on("newMessage", (newMessage) => {
-      if (newMessage.senderId !== selectedUser._id) return;   //* to prevent form all user send message
+      if (newMessage.senderId !== selectedUser._id) return; //* to prevent form all user send message
       set({ messages: [...get().messages, newMessage] });
     });
-    ;
   },
+
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
     socket.off("newMessage");
   },
+
   setSelectedUser: (selectedUser) => {
     // console.log(selectedUser);
     set({ selectedUser });
