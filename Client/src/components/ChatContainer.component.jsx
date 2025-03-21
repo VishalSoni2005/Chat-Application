@@ -16,11 +16,15 @@ const ChatContainer = () => {
     getMessages,
     isMessagesLoading,
     selectedUser,
-    subscribeToMessages,
-    unsubscribeFromMessages
+    subscribeToMessages, // newMessage socket on
+    unsubscribeFromMessages // socket off
   } = useChatStore();
 
   const { authUser } = useAuthStore();
+
+  // console.log("messages", messages);
+  // console.log("authUser", authUser);
+  // console.log("selectedUser", selectedUser);
 
   const messageEndRef = useRef(null);
 
@@ -31,7 +35,7 @@ const ChatContainer = () => {
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
-  }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [selectedUser._id, getMessages, messages, subscribeToMessages, unsubscribeFromMessages]);
 
   // scroll to bottom after sending message
   useEffect(() => {

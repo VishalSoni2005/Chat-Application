@@ -21,7 +21,7 @@ export const getRecieverSocketId = (userId) => {
 
 //? note: on -> event listener && connection is event && socket is connection b/w browser and server
 io.on("connection", (socket) => {
-  console.log(`Client Connected: ${socket.id}`);
+ // console.log(`Client Connected: ${socket.id}`);
 
   // console.log("socket handshake -->> ",socket.handshake);
   // console.log("socket handshake query -->> ",socket.handshake.query);
@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
   io.emit("getOnlineUsers", Object.keys(onlineUsers)); //* this is captured by frontend
 
   socket.on("disconnect", () => {
-    console.log(`User Disconnected: ${socket.id}`);
+    // console.log(`User Disconnected: ${socket.id}`);
     delete onlineUsers[userId];
     io.emit("getOnlineUsers", Object.keys(onlineUsers)); //* to tell that this user is offline
   });

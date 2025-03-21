@@ -62,7 +62,7 @@ export const useChatStore = create((set, get) => ({
     // console.log("socket from useChatStore : ", socket);
 
     socket.on("newMessage", (newMessage) => {
-      if (newMessage.senderId !== selectedUser._id) return; //* to prevent form all user send message
+      if (newMessage.senderId !== selectedUser._id) return; // to prevent form all user send message
       set({ messages: [...get().messages, newMessage] });
     });
   },
@@ -72,8 +72,8 @@ export const useChatStore = create((set, get) => ({
     socket.off("newMessage");
   },
 
-  setSelectedUser: (selectedUser) => {
+  setSelectedUser: (userSelectedFromSidebar) => {
     // console.log(selectedUser);
-    set({ selectedUser });
+    set({ selectedUser : userSelectedFromSidebar });
   }
 }));
