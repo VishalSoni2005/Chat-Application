@@ -31,19 +31,17 @@ const ChatContainer = () => {
   // useEffect will run when selectedUser changes
   useEffect(() => {
     getMessages(selectedUser._id);
-
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
   }, [selectedUser._id, getMessages, messages, subscribeToMessages, unsubscribeFromMessages]);
 
   // scroll to bottom after sending message
-  useEffect(() => {
-    if (messageEndRef.current && messages) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
-
+    useEffect(() => {
+      if (messageEndRef.current && messages) {
+        messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, [messages]);
   if (isMessagesLoading) {
     return (
       <div className="flex flex-1 flex-col overflow-auto">

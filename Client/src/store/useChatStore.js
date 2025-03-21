@@ -32,7 +32,7 @@ export const useChatStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
 
-      //* res.data contain : { senderId, reserverId, text, img }
+      // res.data contain : { senderId, reserverId, text, img }
 
       set({ messages: res.data });
     } catch (error) {
