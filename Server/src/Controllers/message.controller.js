@@ -4,6 +4,10 @@ import User from "../Model/user.model.js";
 import { v2 as cloudinary } from "cloudinary";
 import { io } from "../Lib/socket.js";
 
+// const iv = crypto.randomBytes(16);
+// let ivHex;
+// const SECRET_KEY = crypto.createHash("sha256").update("vishal").digest();
+
 // Utility function to upload files to Cloudinary
 async function uploadToCloudinary(file, folder = "VishalSoni", quality) {
   const options = { folder };
@@ -74,8 +78,8 @@ export const sendMessage = async (req, res) => {
     const receiverSocketId = getRecieverSocketId(receiverId);
 
     //* key funcionality to one to one personal chat at real time msg display
-    if(receiverId) {
-      io.to(receiverSocketId).emit('newMessage', newMessage);
+    if (receiverId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
     }
     res.status(201).json(newMessage);
   } catch (error) {
