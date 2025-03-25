@@ -9,12 +9,12 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     if (config.url === "/auth/check") {
-      console.log("Sending Cookies: ", document.cookie);
+      // console.log("Sending Cookies: ", document.cookie);
     }
     return config;
   },
   (error) => {
-    // console.error("Request Error form AxiosInstance: ", error);
+    console.error("Request Error form AxiosInstance: ", error);
     return Promise.reject(error);
   }
 );

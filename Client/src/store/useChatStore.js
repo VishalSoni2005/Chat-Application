@@ -3,12 +3,66 @@ import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import { useAuthStore } from "./useAuthStore";
 
+import crypto from "crypto-js";
+
+const generate_iv = () => {
+  return crypto.lib.WordArray.random(16);
+};
+
+const generate_key = () => {
+  return crypto.PBKDF2("vishal", crypto.lib.WordArray.random(16), {
+    keySize: 256 / 32, // AES-256 requires a 32-byte key
+    iterations: 1000
+  });
+};
+
+const key = generate_key();
+const iv = generate_iv();
+
+const encrypt_message = (text) => {
+  try {
+    const cipher = crypto.AES.encrypt(text, key, {
+      iv: iv,
+      mode: crypto.mode.CBC,
+      padding: crypto.pad.Pkcs7
+    });
+
+    //* return the iv and cipher text in base64 format
+    return iv.toString(crypto.enc.Base64) + ":" + cipher.toString();
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+const decrypt_message = (cipherText) => {
+  try {
+    const [ivBase64, encryptedText] = cipherText.split(":");
+    //* convert the iv from base64 to WordArray
+    const iv = crypto.enc.Base64.parse(ivBase64);
+
+    const decrypted = crypto.AES.decrypt(encryptedText, key, {
+      iv: iv,
+      mode: crypto.mode.CBC,
+      padding: crypto.pad.Pkcs7
+    });
+
+    const decryptedText = decrypted.toString(crypto.enc.Utf8);
+
+    return decryptedText;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const useChatStore = create((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
   isUserLoading: false,
   isMessagesLoading: false,
+
 
   getUsers: async () => {
     set({ isUserLoading: true });
@@ -27,6 +81,7 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  //* decrypting when we retrive data from backend
   getMessages: async (userId) => {
     set({ isUserLoading: true });
     try {
@@ -35,7 +90,13 @@ export const useChatStore = create((set, get) => ({
 
       // res.data contain : { senderId, reserverId, text, img }
 
-      set({ messages: res.data });
+      //* decrypting
+      const decrypteMessage = res.data.map( (msg) => ({
+        ...msg,
+        text: decrypt_message(msg.text)
+      }))
+
+      set({ messages: decrypteMessage });
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -47,10 +108,12 @@ export const useChatStore = create((set, get) => ({
     const { selectedUser, messages } = get();
     try {
       // todo: encrypt here
-      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
 
       set({ message: [...messages, res.data] });
-      // toast.success("Message sent successfully");
+      toast.success("Message sent successfully");
     } catch (error) {
       toast.error(`Error sending message: ${error.response?.data?.message || error.message}`);
     }
