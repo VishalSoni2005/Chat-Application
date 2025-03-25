@@ -7,6 +7,7 @@ const MessageInput = () => {
   const [text, setText] = useState("");
 
   const [imagePreview, setImagePreview] = useState(null);
+  const [backendImage, setBackendImage] = useState(null);
 
   const fileInputRef = useRef(null);
 
@@ -19,7 +20,13 @@ const MessageInput = () => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("profilePic", file);
+
+    setBackendImage(formData);
+
     const reader = new FileReader();
+    
     reader.onloadend = () => {
       setImagePreview(reader.result); // set the preview
     };
@@ -38,7 +45,7 @@ const MessageInput = () => {
     try {
       await sendMessage({
         text: text.trim(),
-        image: imagePreview
+        image: backendImage
       });
 
       // Clear form
@@ -92,7 +99,7 @@ const MessageInput = () => {
           <button //This button allows the user to open the file picker when clicked.
             type="button"
             className={`btn btn-circle hidden sm:flex ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
-            onClick={() => fileInputRef.current?.click()}> 
+            onClick={() => fileInputRef.current?.click()}>
             {/* The onClick triger the input file picker form above imput area */}
             <Image size={20} />
           </button>

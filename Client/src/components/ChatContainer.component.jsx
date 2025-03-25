@@ -3,45 +3,36 @@ import { useEffect, useRef } from "react";
 
 import ChatHeader from "./ChatHeader.component";
 import MessageInput from "./MessageInput.component";
-
 import MessageSkeleton from "./skeletons/MessageSkeleton";
-
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 
 const ChatContainer = () => {
-  //* selectedUser / authUser : {fullname, email, password, profilePic, _id, CreatedAt, UpdatedAt}
   const {
     messages,
     getMessages,
     isMessagesLoading,
     selectedUser,
-    subscribeToMessages, // newMessage socket on
-    unsubscribeFromMessages // socket off
+    subscribeToMessages,
+    unsubscribeFromMessages
   } = useChatStore();
-
   const { authUser } = useAuthStore();
-
-  // console.log("messages", messages);
-  // console.log("authUser", authUser);
-  // console.log("selectedUser", selectedUser);
-
   const messageEndRef = useRef(null);
 
-  // useEffect will run when selectedUser changes
   useEffect(() => {
     getMessages(selectedUser._id);
+
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
-  }, [selectedUser._id, getMessages, messages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
-  // scroll to bottom after sending message
-    useEffect(() => {
-      if (messageEndRef.current && messages) {
-        messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }, [messages]);
+  useEffect(() => {
+    if (messageEndRef.current && messages) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   if (isMessagesLoading) {
     return (
       <div className="flex flex-1 flex-col overflow-auto">

@@ -31,10 +31,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    credentials: true
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    credentials: true 
   })
 );
+
+app.options("*", cors()); // enable pre-flight
 
 // routes
 app.use("/api/auth", authRoute);

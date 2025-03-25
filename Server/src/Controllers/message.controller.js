@@ -10,12 +10,16 @@ import { io } from "../Lib/socket.js";
 
 // Utility function to upload files to Cloudinary
 async function uploadToCloudinary(file, folder = "VishalSoni", quality) {
-  const options = { folder };
-  options.resource_type = "auto"; //todo: important to detect file type
-  if (quality) {
-    options.quality = quality; //todo: important to compress file size
-  }
-  return await cloudinary.uploader.upload(file.tempFilePath, options);
+ try {
+   const options = { folder };
+   options.resource_type = "auto"; //todo: important to detect file type
+   if (quality) {
+     options.quality = quality; //todo: important to compress file size
+   }
+   return await cloudinary.uploader.upload(file.tempFilePath, options);
+ } catch (error) {
+    console.error("Error uploading to Cloudinary", error);
+ }
 }
 
 export const getUserForSidebar = async (req, res) => {
@@ -62,7 +66,11 @@ export const sendMessage = async (req, res) => {
 
     let imageUrl;
     if (image) {
+      console.log("Image is there", image);
+      
       const uploadResponse = await uploadToCloudinary(image);
+      console.log("Upload Response", uploadResponse);
+      
       imageUrl = uploadResponse.secure_url;
     }
 
