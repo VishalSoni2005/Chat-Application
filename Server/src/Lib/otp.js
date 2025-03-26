@@ -1,52 +1,47 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-import otpGenerator from "otp-generator";
 
-dotenv.config();
+// Step one: generate OTP (using a more secure random generator)
+const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
 
-const generateOTP = () => {
-  return otpGenerator.generate(6, {
-    upperCaseAlphabets: false,
-    specialChars: false,
-    lowerCaseAlphabets: false
-  });
-};
-
+// Step two: create a transporter with proper TypeScript typing
 const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: Number(process.env.MAIL_PORT), 
-  secure: process.env.MAIL_PORT === "465", 
+  service: "gmail", // Using service name instead of host/port
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS
+    user: "vsoni0882@gmail.com",
+    pass: "sqylamwdbvpovord" // Consider using environment variables
   }
 });
 
-async function sendOTP() {
-  const otp = generateOTP(); 
-  console.log("Generated OTP:", otp);
+// Step three: Define email options interface
+// interface MailOptions {
+//   from: string;
+//   to: string;
+//   subject: string;
+//   text: string;
+//   html: string;
+// }
 
-
-  
-console.log("MAIL_HOST:", process.env.MAIL_HOST);
-console.log("MAIL_USER:", process.env.MAIL_USER);
-console.log("MAIL_PASS:", process.env.MAIL_PASS);
-console.log("MAIL_PORT:", process.env.MAIL_PORT);
+// Step four: send OTP with proper error handling
+export const sendOTP = async () => {
+  const mailOptions = {
+    from: `YOUR BUDDY vishal <vsoni0882@gmail.com>`,
+    to: "vsoni0882@gmail.com",
+    subject: "Testing Purpose",
+    text: `Your OTP is ${otp}`,
+    html: `<h3>Your OTP is: <b>${otp}</b></h3>`
+  };
 
   try {
-    const info = await transporter.sendMail({
-      from: `"Your App" <${process.env.MAIL_USER}>`, 
-      to: "nellusoni03175@gmail.com",
-      subject: "Your OTP Code",
-      text: `Your OTP is: ${otp}`, // Plain text email
-      html: `<h3>Your OTP is: <b>${otp}</b></h3>` // HTML formatted email
-    });
-
-    console.log("Message sent:", info.messageId);
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Message sent:", info);
   } catch (error) {
-    console.error("Error sending email:", error);
+    if (error instanceof Error) {
+      console.error("Error sending email:", error.message);
+    } else {
+      console.error("Unknown error occurred");
+    }
   }
-}
+};
 
-sendOTP().catch(console.error);
-
+// // Execute the function
+// sendOTP();
