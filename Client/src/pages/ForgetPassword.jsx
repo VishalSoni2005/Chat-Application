@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Loader2, Mail, MessageSquare, KeyRound } from "lucide-react";

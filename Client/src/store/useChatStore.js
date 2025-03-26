@@ -17,9 +17,9 @@ const generate_key = () => {
 };
 
 const key = generate_key();
-const iv = generate_iv();
 
 const encrypt_message = (text) => {
+  const iv = generate_iv();
   try {
     const cipher = crypto.AES.encrypt(text, key, {
       iv: iv,
@@ -63,7 +63,6 @@ export const useChatStore = create((set, get) => ({
   isUserLoading: false,
   isMessagesLoading: false,
 
-
   getUsers: async () => {
     set({ isUserLoading: true });
     try {
@@ -91,10 +90,10 @@ export const useChatStore = create((set, get) => ({
       // res.data contain : { senderId, reserverId, text, img }
 
       //* decrypting
-      const decrypteMessage = res.data.map( (msg) => ({
+      const decrypteMessage = res.data.map((msg) => ({
         ...msg,
         text: decrypt_message(msg.text)
-      }))
+      }));
 
       set({ messages: decrypteMessage });
     } catch (error) {
@@ -108,9 +107,19 @@ export const useChatStore = create((set, get) => ({
     const { selectedUser, messages } = get();
     try {
       // todo: encrypt here
+      const encryptedText = encrypt_message(messageData.text)
+
+      messageData.text = encryptedText;
+
+      console.log("encrypted message from sendMessage action :", encryptedText);
+      
+
       const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
+
+      console.log("response from backend: ", res.data);
+      
 
       set({ message: [...messages, res.data] });
       toast.success("Message sent successfully");
@@ -123,7 +132,7 @@ export const useChatStore = create((set, get) => ({
     const { selectedUser } = get();
     if (!selectedUser) return;
 
-    const socket = useAuthStore.getState().socket; // getting socket from auth store
+    const socket = useAuthStore.getState().socket; 
     // console.log("socket from useChatStore : ", socket);
 
     socket.on("newMessage", (newMessage) => {
@@ -138,7 +147,6 @@ export const useChatStore = create((set, get) => ({
   },
 
   setSelectedUser: (userSelectedFromSidebar) => {
-    // console.log(selectedUser);
     set({ selectedUser: userSelectedFromSidebar });
   }
 }));
