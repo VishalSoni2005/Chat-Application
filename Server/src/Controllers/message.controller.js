@@ -4,22 +4,18 @@ import User from "../Model/user.model.js";
 import { v2 as cloudinary } from "cloudinary";
 import { io } from "../Lib/socket.js";
 
-// const iv = crypto.randomBytes(16);
-// let ivHex;
-// const SECRET_KEY = crypto.createHash("sha256").update("vishal").digest();
-
 // Utility function to upload files to Cloudinary
 async function uploadToCloudinary(file, folder = "VishalSoni", quality) {
- try {
-   const options = { folder };
-   options.resource_type = "auto"; //todo: important to detect file type
-   if (quality) {
-     options.quality = quality; //todo: important to compress file size
-   }
-   return await cloudinary.uploader.upload(file.tempFilePath, options);
- } catch (error) {
+  try {
+    const options = { folder };
+    options.resource_type = "auto"; //todo: important to detect file type
+    if (quality) {
+      options.quality = quality; //todo: important to compress file size
+    }
+    return await cloudinary.uploader.upload(file.tempFilePath, options);
+  } catch (error) {
     console.error("Error uploading to Cloudinary", error);
- }
+  }
 }
 
 export const getUserForSidebar = async (req, res) => {
@@ -61,17 +57,21 @@ export const getMessages = async (req, res) => {
 export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
+    console.log("Request Body", req.body);
+    
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
+    const file = req.files?.profilePic;
+
     let imageUrl;
-    if (image) {
-      console.log("Image is there", image);
-      
-      const uploadResponse = await uploadToCloudinary(image);
+    if (file) {
+      const uploadResponse = await uploadToCloudinary(file);
       console.log("Upload Response", uploadResponse);
-      
+
       imageUrl = uploadResponse.secure_url;
+
+      console.log("Image URL", imageUrl);
     }
 
     const newMessage = new Message({

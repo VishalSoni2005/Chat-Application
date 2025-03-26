@@ -95,10 +95,7 @@ export const logout = (req, res) => {
 export const updateProfilePicture = async (req, res) => {
   try {
     const file = req.files?.profilePic;
-    const userId = req.user._id;
-
-    // console.log("Request Body from frontend: ", file);
-    
+    const userId = req.user._id;    
 
     if (!file) {
       return res.status(400).json({ message: "All fields are required" });
