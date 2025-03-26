@@ -1,14 +1,16 @@
 import nodemailer from "nodemailer";
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Step one: generate OTP (using a more secure random generator)
-const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+export const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
 
 // Step two: create a transporter with proper TypeScript typing
 const transporter = nodemailer.createTransport({
   service: "gmail", // Using service name instead of host/port
   auth: {
-    user: "vsoni0882@gmail.com",
-    pass: "sqylamwdbvpovord" // Consider using environment variables
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_USER 
   }
 });
 
@@ -21,7 +23,6 @@ const transporter = nodemailer.createTransport({
 //   html: string;
 // }
 
-// Step four: send OTP with proper error handling
 export const sendOTP = async () => {
   const mailOptions = {
     from: `YOUR BUDDY vishal <vsoni0882@gmail.com>`,
@@ -42,6 +43,3 @@ export const sendOTP = async () => {
     }
   }
 };
-
-// // Execute the function
-// sendOTP();
