@@ -41,10 +41,8 @@ function App() {
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path="/settings" element={<SettingPage />} />
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
-
         //* forgot password route
-        <Route path='forget-password' element={<ForgetPassword/>}/>
-        
+        <Route path="forgot-password" element={<ForgetPassword />} />
       </Routes>
 
       <Toaster />

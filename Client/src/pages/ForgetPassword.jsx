@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Loader2, Mail, MessageSquare, KeyRound } from "lucide-react";
 import toast from "react-hot-toast";
+import { axiosInstance } from "../lib/axios";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
@@ -21,9 +22,9 @@ const ForgetPassword = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call to send OTP
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("OTP sent to your email");
+      const response = axiosInstance.post('/forgot-password', email);
+
+
       setStep("otp");
     } catch (error) {
       toast.error("Failed to send OTP. Please try again.");
