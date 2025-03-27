@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Loader2, Mail, MessageSquare, KeyRound } from "lucide-react";
 import toast from "react-hot-toast";
-import { axiosInstance } from "../lib/axios";
+import axios from "axios";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
@@ -10,6 +10,8 @@ const ForgetPassword = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [backendOTP, setBackendOTP] = useState(null);
 
   // Handle email submission
   const handleEmailSubmit = async (e) => {
@@ -22,7 +24,17 @@ const ForgetPassword = () => {
     setIsLoading(true);
 
     try {
-      const response = axiosInstance.post('/forgot-password', email);
+      // send otp
+      const response = await axios.post('http://localhost:5001/api/forgot-password', { email });
+
+      const opt_from_backend = response.data.otp;
+
+      setBackendOTP(opt_from_backend);
+
+      console.log("otp from backend",backendOTP);
+      
+
+      // toast.success("OTP sent successfully");
 
 
       setStep("otp");
@@ -58,6 +70,11 @@ const ForgetPassword = () => {
     if (otpValue.length !== 6) {
       return toast.error("Please enter a valid 6-digit OTP");
     }
+
+    console.log("User OTP ",otpValue);
+    console.log("Type of User OTP ",typeof otpValue);
+    
+    
 
     setIsLoading(true);
 

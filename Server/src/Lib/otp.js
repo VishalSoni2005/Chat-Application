@@ -10,7 +10,7 @@ const generateOTP = () => {
   // console.log(process.env.MAIL_PASS);
   //console.log(process.env.MAIL_USER);
 
-  const randomBytes = crypto.randomBytes(4); // 4 bytes 
+  const randomBytes = crypto.randomBytes(4); // 4 bytes
   const randomNumber = parseInt(randomBytes.toString("hex"), 16);
   return 100000 + (randomNumber % 900000); // Ensures 6 digits (100000-999999)
 };
@@ -48,7 +48,7 @@ const sendOtpEmail = async (recipientEmail) => {
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("OTP email sent to:", recipientEmail);
+    // console.log("OTP email sent to:", recipientEmail);
     // console.log("Message ID:", info.messageId);
     return otp;
   } catch (error) {
