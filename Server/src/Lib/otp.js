@@ -23,10 +23,10 @@ const transporter = nodemailer.createTransport({
 //   html: string;
 // }
 
-export const sendOTP = async () => {
+export const send_otp_via_nodemailer = async (email) => {
   const mailOptions = {
     from: `YOUR BUDDY vishal <vsoni0882@gmail.com>`,
-    to: "vsoni0882@gmail.com",
+    to: email,
     subject: "Testing Purpose",
     text: `Your OTP is ${otp}`,
     html: `<h3>Your OTP is: <b>${otp}</b></h3>`

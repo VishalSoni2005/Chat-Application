@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import messageRoute from "./Routes/message.route.js";
 import authRoute from "./Routes/auth.route.js";
+import forgotPassword from './Routes/forgetPassword.route.js'
 dotenv.config();
 
 // database connection
@@ -43,6 +44,7 @@ app.options("*", cors()); // enable pre-flight
 // routes
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
+app.use('/api', forgotPassword)
 
 // server start up
 const PORT = process.env.PORT;
