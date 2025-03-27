@@ -1,45 +1,62 @@
 import nodemailer from "nodemailer";
-import dotenv from 'dotenv';
+import crypto from "crypto";
+import dotenv from "dotenv";
+
 dotenv.config();
+// Generate a secure 6-digit OTP
+const generateOTP = () => {
+  //! debug
+  //console.log("Full process.env:", process.env);
+  // console.log(process.env.MAIL_PASS);
+  //console.log(process.env.MAIL_USER);
 
-// Step one: generate OTP (using a more secure random generator)
-export const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+  const randomBytes = crypto.randomBytes(4); // 4 bytes 
+  const randomNumber = parseInt(randomBytes.toString("hex"), 16);
+  return 100000 + (randomNumber % 900000); // Ensures 6 digits (100000-999999)
+};
 
-// Step two: create a transporter with proper TypeScript typing
 const transporter = nodemailer.createTransport({
-  service: "gmail", // Using service name instead of host/port
+  service: "gmail",
   auth: {
     user: process.env.MAIL_USER,
-    pass: process.env.MAIL_USER 
+    pass: process.env.MAIL_PASS
   }
 });
 
-// Step three: Define email options interface
-// interface MailOptions {
-//   from: string;
-//   to: string;
-//   subject: string;
-//   text: string;
-//   html: string;
-// }
+const sendOtpEmail = async (recipientEmail) => {
+  const otp = generateOTP();
 
-export const send_otp_via_nodemailer = async (email) => {
   const mailOptions = {
-    from: `YOUR BUDDY vishal <vsoni0882@gmail.com>`,
-    to: email,
-    subject: "Testing Purpose",
-    text: `Your OTP is ${otp}`,
-    html: `<h3>Your OTP is: <b>${otp}</b></h3>`
+    from: '"Your Buddy Vishal" <vsoni0882@gmail.com>',
+    to: recipientEmail,
+    subject: "Your One-Time Password (OTP)",
+    text: `Your OTP is: ${otp}\nThis code will expire in 10 minutes.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #2563eb;">Your One-Time Password</h2>
+        <p>Here's your OTP for authentication:</p>
+        <div style="background: #f3f4f6; padding: 16px; text-align: center; 
+                    margin: 16px 0; font-size: 24px; font-weight: bold;">
+          ${otp}
+        </div>
+        <p style="color: #6b7280; font-size: 14px;">
+          This code will expire in 10 minutes. Please don't share it with anyone.
+        </p>
+      </div>
+    `
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Message sent:", info);
+    console.log("OTP email sent to:", recipientEmail);
+    // console.log("Message ID:", info.messageId);
+    return otp;
   } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error sending email:", error.message);
-    } else {
-      console.error("Unknown error occurred");
-    }
+    console.error("Error sending OTP email:", error.message);
+    return { success: false, error: error.message };
   }
 };
+
+// sendOtpEmail("vsoni0882@gmail.com")
+
+export default sendOtpEmail;
