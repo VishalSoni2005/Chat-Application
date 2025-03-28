@@ -25,18 +25,16 @@ const ForgetPassword = () => {
 
     try {
       // send otp
-      const response = await axios.post('http://localhost:5001/api/forgot-password', { email });
+      const response = await axios.post("http://localhost:5001/api/forgot-password", { email });
 
-      const opt_from_backend = response.data.otp;
+      // get otp
+      // const otp_from_backend = response.data.otp;
+      const otp_from_backend = response.data.otp;
 
-      setBackendOTP(opt_from_backend);
+      // set otp
+      setBackendOTP(otp_from_backend);
 
-      console.log("otp from backend",backendOTP);
-      
-
-      // toast.success("OTP sent successfully");
-
-
+      // console.log("otp from backend",backendOTP); //! blunder accessing setBackendOTP write after calling
       setStep("otp");
     } catch (error) {
       toast.error("Failed to send OTP. Please try again.");
@@ -71,22 +69,18 @@ const ForgetPassword = () => {
       return toast.error("Please enter a valid 6-digit OTP");
     }
 
-    console.log("User OTP ",otpValue);
-    console.log("Type of User OTP ",typeof otpValue);
-    
-    
+    const otp_nums = Number(otpValue)
+
+    console.log("Backend OTP ", backendOTP);
+    console.log("User OTP ", otp_nums);
 
     setIsLoading(true);
 
     try {
-      // Simulate API call to verify OTP
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("OTP verified successfully");
+     
+      //! work from here
 
-      // Redirect to login page after successful verification
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+      if(otp_nums === backendOTP ) {}
     } catch (error) {
       toast.error("Invalid OTP. Please try again.");
       console.error("Error verifying OTP:", error);
