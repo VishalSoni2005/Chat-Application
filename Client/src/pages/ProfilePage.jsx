@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import toast from "react-hot-toast";
-import { Camera, Mail, User } from "lucide-react";
+import { Camera, Mail, User, Calendar, Shield, Edit, CheckCircle } from 'lucide-react';
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
@@ -15,7 +15,6 @@ const ProfilePage = () => {
     formData.append("profilePic", file);
 
     try {
-      // Create a URL for the selected image to display in the UI
       await updateProfile(formData);
       const imageUrl = URL.createObjectURL(file);
       setSelectedImg(imageUrl);
@@ -24,82 +23,188 @@ const ProfilePage = () => {
       console.error("Error updating profile:", error);
     }
   };
+
   return (
-    <div className="h-auto pt-20">
-      <div className="mx-auto max-w-2xl p-4 py-8">
-        <div className="bg-base-300 space-y-8 rounded-xl p-6">
-          <div className="flex flex-col text-center">
-            <div className="flex items-center justify-center gap-2">
-              <div className="h-5 w-5 animate-pulse rounded-full bg-green-600" />
-              <h1 className="font-serif text-2xl font-semibold capitalize">
-                {authUser?.fullname || "Profile"}
-              </h1>
-            </div>
-            <p className="mt-2">{authUser?.fullname} profile information</p>
-          </div>
-
-          {/* avatar upload section */}
-
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              <img
-                src={selectedImg || authUser.profilePic || "/avatar.png"}
-                alt="Profile"
-                className="size-32 rounded-full border-4 object-cover"
-              />
-              <label
-                htmlFor="avatar-upload" //* When you set htmlFor="avatar-upload", it links the <label> to the <input> element with id="avatar-upload".
-                className={`bg-base-content absolute bottom-0 right-0 cursor-pointer rounded-full p-2 transition-all duration-200 hover:scale-105 ${isUpdatingProfile ? "pointer-events-none animate-pulse" : ""} `}>
-                <Camera className="text-base-200 h-5 w-5" />
-                <input
-                  type="file"
-                  id="avatar-upload"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  disabled={isUpdatingProfile}
-                />
-              </label>
-            </div>
-            <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+    <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-100 px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl">
+        {/* Header with decorative elements */}
+        <div className="relative mb-12 text-center">
+          <div className="absolute left-1/2 top-0 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-xl"></div>
+          <h1 className="relative font-serif text-4xl font-bold tracking-tight text-base-content">
+            Profile
+          </h1>
+          <div className="mt-2 flex items-center justify-center gap-2">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-success"></span>
+            <p className="text-base-content/70">
+              Welcome back, {authUser?.fullname || "User"}
             </p>
           </div>
+        </div>
 
-          <div className="space-y-6">
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 text-sm text-zinc-400">
-                <User className="h-4 w-4" />
-                Full Name
+        {/* Main content with glass-morphism effect */}
+        <div className="overflow-hidden rounded-2xl bg-base-100/50 shadow-xl backdrop-blur-sm">
+          {/* Profile header with background */}
+          <div className="relative h-32 bg-gradient-to-r from-primary/20 to-secondary/20 sm:h-40">
+            <div className="absolute -bottom-16 left-8 sm:-bottom-20 sm:left-10">
+              <div className="relative">
+                <div className="aspect-square h-32 overflow-hidden rounded-full border-4 border-base-100 bg-base-300 shadow-lg sm:h-40">
+                  <img
+                    src={selectedImg || authUser.profilePic || "/avatar.png"}
+                    alt="Profile"
+                    className="h-full w-full object-cover transition-all duration-300 hover:scale-105"
+                  />
+                </div>
+                <label
+                  htmlFor="avatar-upload"
+                  className={`absolute bottom-2 right-2 rounded-full bg-base-100 p-2 shadow-md transition-all duration-200 hover:bg-primary hover:text-primary-content sm:bottom-3 sm:right-3 sm:p-3 ${
+                    isUpdatingProfile ? "animate-pulse bg-primary/50" : ""
+                  }`}
+                >
+                  <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <input
+                    type="file"
+                    id="avatar-upload"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={isUpdatingProfile}
+                  />
+                </label>
               </div>
-              <p className="bg-base-200 rounded-lg border px-4 py-2.5">{authUser?.fullname}</p>
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 text-sm text-zinc-400">
-                <Mail className="h-4 w-4" />
-                Email Address
-              </div>
-              <p className="bg-base-200 rounded-lg border px-4 py-2.5">{authUser?.email}</p>
             </div>
           </div>
 
-          <div className="bg-base-300 mt-6 rounded-xl p-6">
-            <h2 className="mb-4 text-lg font-medium">Account Information</h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between border-b border-zinc-700 py-2">
-                <span>Member Since</span>
-                <span>{authUser.createdAt?.split("T")[0]}</span>
+          {/* Profile content */}
+          <div className="mt-16 px-6 pb-8 pt-4 sm:mt-20 sm:px-10">
+            {/* User identity section */}
+            <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="font-serif text-2xl font-bold capitalize text-base-content">
+                  {authUser?.fullname}
+                </h2>
+                <p className="mt-1 flex items-center gap-1.5 text-sm text-base-content/70">
+                  <Mail className="h-3.5 w-3.5" />
+                  {authUser?.email}
+                </p>
               </div>
-              <div className="flex items-center justify-between py-2">
-                <span>Account Status</span>
-                <span className="text-green-500">Active</span>
+              <div className="mt-4 sm:mt-0">
+                <div className="badge badge-primary gap-1.5 py-3">
+                  <CheckCircle className="h-3.5 w-3.5" />
+                  <span>Verified Account</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Upload status message */}
+            {isUpdatingProfile && (
+              <div className="mb-6 rounded-lg bg-info/10 px-4 py-3 text-sm text-info">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-info"></div>
+                  <span>Uploading your profile picture...</span>
+                </div>
+              </div>
+            )}
+
+            {/* Information cards */}
+            <div className="grid gap-6 sm:grid-cols-2">
+              {/* Personal Information Card */}
+              <div className="card bg-base-200/50 transition-all duration-300 hover:bg-base-200">
+                <div className="card-body">
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="card-title text-lg font-medium text-base-content">
+                      <User className="mr-2 h-5 w-5 text-primary" />
+                      Personal Details
+                    </h3>
+                    <button className="btn btn-circle btn-ghost btn-xs">
+                      <Edit className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                  <div className="divider my-1"></div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-xs font-medium uppercase tracking-wide text-base-content/60">
+                        Full Name
+                      </label>
+                      <div className="mt-1 rounded-md bg-base-300/50 p-3 text-base-content">
+                        {authUser?.fullname}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="text-xs font-medium uppercase tracking-wide text-base-content/60">
+                        Email Address
+                      </label>
+                      <div className="mt-1 rounded-md bg-base-300/50 p-3 text-base-content">
+                        {authUser?.email}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Information Card */}
+              <div className="card bg-base-200/50 transition-all duration-300 hover:bg-base-200">
+                <div className="card-body">
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="card-title text-lg font-medium text-base-content">
+                      <Shield className="mr-2 h-5 w-5 text-primary" />
+                      Account Status
+                    </h3>
+                  </div>
+                  <div className="divider my-1"></div>
+                  
+                  <ul className="space-y-3">
+                    <li className="flex items-center justify-between rounded-md bg-base-300/30 p-3">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-primary" />
+                        <span className="text-sm">Member Since</span>
+                      </div>
+                      <span className="font-mono text-sm font-medium">
+                        {authUser.createdAt?.split("T")[0] || "2023-01-01"}
+                      </span>
+                    </li>
+                    
+                    <li className="flex items-center justify-between rounded-md bg-base-300/30 p-3">
+                      <div className="flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-primary" />
+                        <span className="text-sm">Status</span>
+                      </div>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-success/20 px-3 py-1 text-xs font-medium text-success">
+                        <span className="h-1.5 w-1.5 rounded-full bg-success"></span>
+                        Active
+                      </span>
+                    </li>
+                  </ul>
+                  
+                  <div className="mt-4">
+                    <div className="stats stats-vertical w-full bg-base-300/30 shadow-sm lg:stats-horizontal">
+                      <div className="stat">
+                        <div className="stat-title text-xs">Messages</div>
+                        <div className="stat-value text-lg text-primary">89</div>
+                      </div>
+                      <div className="stat">
+                        <div className="stat-title text-xs">Connections</div>
+                        <div className="stat-value text-lg text-secondary">12</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Footer section with additional info */}
+        <div className="mt-8 text-center text-sm text-base-content/60">
+          <p>
+            Last login: {new Date().toLocaleDateString()} at{" "}
+            {new Date().toLocaleTimeString()}
+          </p>
         </div>
       </div>
     </div>
   );
 };
+
 export default ProfilePage;

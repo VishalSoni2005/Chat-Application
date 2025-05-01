@@ -5,7 +5,9 @@ import SignUpPage from "./pages/SignUpPage";
 import SettingPage from "./pages/SettingPage";
 import ProfilePage from "./pages/ProfilePage";
 import Navbar from "./components/Navbar.component";
+
 import { useAuthStore } from "./store/useAuthStore.js";
+
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
@@ -14,6 +16,7 @@ import ForgetPassword from "./pages/ForgetPassword.jsx";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  
   const { theme } = useThemeStore();
 
   //! console.log("All online users are : ", onlineUsers);
