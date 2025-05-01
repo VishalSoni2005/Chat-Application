@@ -20,15 +20,14 @@ const MessageInput = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("profilePic", file);
 
-    setBackendImage(formData);
+    //* here i set image send to store
+    setBackendImage(file);
 
     const reader = new FileReader();
     
     reader.onloadend = () => {
-      setImagePreview(reader.result); // set the preview
+      setImagePreview(reader.result); // set preview
     };
     reader.readAsDataURL(file);
   };
@@ -47,10 +46,11 @@ const MessageInput = () => {
         text: text.trim(),
         image: backendImage
       });
-
-      // Clear form
+      
+      
       setText("");
       setImagePreview(null);
+      setBackendImage(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -59,7 +59,7 @@ const MessageInput = () => {
 
   return (
     <div className="w-full p-4">
-      {imagePreview && ( // Virtual DOM diffing algorithm activated to render this image
+      {imagePreview && ( 
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
             <img

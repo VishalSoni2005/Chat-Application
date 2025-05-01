@@ -56,22 +56,22 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image } = req.body;
-    console.log("Request Body", req.body);
+    console.log(req.body);
+    
+    const { text } = req.body;
+    const file = req.files?.profilePic;
     
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
-    const file = req.files?.profilePic;
-
     let imageUrl;
     if (file) {
       const uploadResponse = await uploadToCloudinary(file);
-      console.log("Upload Response", uploadResponse);
+      // console.log("Upload Response", uploadResponse);
 
       imageUrl = uploadResponse.secure_url;
 
-      console.log("Image URL", imageUrl);
+      // console.log("Image URL", imageUrl);
     }
 
     const newMessage = new Message({
