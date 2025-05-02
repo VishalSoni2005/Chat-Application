@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, redirect, useNavigate } from "react-router";
 import { ArrowLeft, Loader2, Mail, MessageSquare, KeyRound } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { usePasswordStore } from '../store/usePasswordStore';
 
 const ForgetPassword = () => {
+  const  { providedEmail } = usePasswordStore();
   const navigate = useNavigate();
   const [step, setStep] = useState("email"); // "email" or "otp"
   const [email, setEmail] = useState("");
@@ -71,16 +73,26 @@ const ForgetPassword = () => {
 
     const otp_nums = Number(otpValue)
 
-    console.log("Backend OTP ", backendOTP);
-    console.log("User OTP ", otp_nums);
+    // console.log("Backend OTP ", backendOTP);
+    // console.log("User OTP ", otp_nums);
 
     setIsLoading(true);
 
     try {
      
-      //! work from here
+      if(otp_nums === backendOTP ) {
+        toast.success("OTP verified successfully");
+        // Redirect to reset password page
+        // dconsole.log(email);
+        
+        providedEmail(email);
+        navigate('/reset-password');
+      } 
+      else {
+        toast.error("Invalid OTP. Please try again.");
+        setOtp(["", "", "", "", "", ""]);
+      }
 
-      if(otp_nums === backendOTP ) {}
     } catch (error) {
       toast.error("Invalid OTP. Please try again.");
       console.error("Error verifying OTP:", error);

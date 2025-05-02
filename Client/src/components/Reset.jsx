@@ -1,25 +1,35 @@
-"use client";
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Loader2, MessageSquare, Lock, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
+import { usePasswordStore } from '../store/usePasswordStore';
+import { axiosInstance } from '../lib/axios';
 
 const ResetPasswordPage = () => {
+  const { email } = usePasswordStore();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: ""
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
+    // console.log(e.target.name);
+    // console.log(e.target.value);
+    
+    // name can be "password" or "confirmPassword"
+    // value is complete value on change ie : "1q" -> "1qw" so on
+
+    
+    const { name, value } = e.target; 
+    setFormData((prev) => ({  //? special way to handle the state
       ...prev,
-      [name]: value
+      [name]: value // e.g. set value of password to password field in formdata
     }));
   };
 
@@ -37,15 +47,27 @@ const ResetPasswordPage = () => {
 
     setIsLoading(true);
 
-    try {
-      // Simulate API call to reset password
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("Password reset successfully");
+    try { // at this point password and confirm password are same 
+      
+      // we need user email to reset password
+      // const email = usePasswordStore.getState().email;  
+      
+      const userCredentials = {
+        email,
+        password: formData.password
+      };
 
-      // Redirect to login page
-      setTimeout(() => {
+      // console.log(userCredentials);
+      
+      const response = await axiosInstance.post("http://localhost:5001/api/reset-password", userCredentials);
+
+
+      if(response.data.success){
+        toast.success("Password reset successfully");
         navigate("/login");
-      }, 1000);
+      }
+      
+     
     } catch (error) {
       toast.error("Failed to reset password. Please try again.");
       console.error("Error resetting password:", error);
@@ -53,6 +75,7 @@ const ResetPasswordPage = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className="grid min-h-screen place-items-center p-6">
@@ -79,7 +102,7 @@ const ResetPasswordPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
+                  name="password" // this name is used to access the password in the handleChange function
                   className="input input-bordered w-full rounded-xl py-3 pl-10"
                   placeholder="••••••••"
                   value={formData.password}

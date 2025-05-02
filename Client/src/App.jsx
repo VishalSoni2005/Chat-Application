@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore.js";
 import ForgetPassword from "./pages/ForgetPassword.jsx";
+import ResetPasswordPage from './components/Reset.jsx';
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -46,6 +47,7 @@ function App() {
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         //* forgot password route
         <Route path="forgot-password" element={<ForgetPassword />} />
+        <Route path='/reset-password' element={<ResetPasswordPage />} />
       </Routes>
 
       <Toaster />

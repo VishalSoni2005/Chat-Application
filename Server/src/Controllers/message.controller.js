@@ -56,10 +56,10 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     
     const { text } = req.body;
-    const file = req.files?.profilePic;
+    const file = req.files?.image;
     
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
@@ -67,11 +67,9 @@ export const sendMessage = async (req, res) => {
     let imageUrl;
     if (file) {
       const uploadResponse = await uploadToCloudinary(file);
-      // console.log("Upload Response", uploadResponse);
-
+  
       imageUrl = uploadResponse.secure_url;
 
-      // console.log("Image URL", imageUrl);
     }
 
     const newMessage = new Message({

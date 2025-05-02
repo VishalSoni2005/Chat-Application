@@ -94,7 +94,7 @@ export const useChatStore = create((set, get) => ({
 
       const formData = new FormData();
       formData.append("text", messageData.text);
-      formData.append("profilePic", messageData.image); 
+      formData.append("image", messageData.image); 
 
 
 
